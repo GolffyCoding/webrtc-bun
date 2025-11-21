@@ -3,6 +3,7 @@ import { serve } from "bun";
 const clients = new Map<string, Bun.ServerWebSocket<any>>();
 
 const server = serve({
+  hostname: "0.0.0.0",
   port: 3001,
   fetch(req, server) {
     // อัปเกรด HTTP Request เป็น WebSocket
@@ -14,10 +15,10 @@ const server = serve({
       // สร้าง ID แบบสุ่ม 8 ตัวอักษรให้ Client
       const id = crypto.randomUUID().slice(0, 8);
       (ws as any).id = id;
-      
+
       // เก็บ Connection ไว้ใน Map
       clients.set(id, ws);
-      
+
       // ส่ง ID กลับไปบอก Client
       ws.send(JSON.stringify({ type: "welcome", id }));
       console.log(`Client connected: ${id}`);
@@ -27,7 +28,7 @@ const server = serve({
       try {
         const data = JSON.parse(message.toString());
         const target = clients.get(data.to);
-        
+
         // ถ้าเจอเป้าหมาย (data.to) ให้ส่งต่อข้อความไปหา
         if (target) {
           // console.log(`Forwarding ${data.type} from ${(ws as any).id} to ${data.to}`);
@@ -38,7 +39,7 @@ const server = serve({
         } else {
           // แจ้งเตือนถ้าหา user ปลายทางไม่เจอ (เฉพาะตอนเริ่มโทร)
           if (data.type === "offer") {
-             ws.send(JSON.stringify({ type: "error", message: "User not found" }));
+            ws.send(JSON.stringify({ type: "error", message: "User not found" }));
           }
         }
       } catch (e) {
