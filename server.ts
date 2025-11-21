@@ -110,7 +110,7 @@ const server = serve({
 });
 
 // แสดงตอน server เริ่มรัน
-console.log("🚀 WebRTC Signaling Server Running");
+console.log("🚀 WebRTC v1 Signaling Server Running");
 console.log(`   - HTTP: http://localhost:${server.port}`);
 console.log(`   - WS:   ws://localhost:${server.port}`);
 console.log("   - Waiting for connections...");
